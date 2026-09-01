@@ -1,5 +1,26 @@
+import { compose} from "./compose";
 import { Context } from "./context";
 import { Router } from "./router";
+
+const A = async (c, next) => {
+  console.log("A before")
+
+  const response = await next()
+
+  console.log("A after")
+
+  return response
+}
+
+const B = async (c, next) => {
+  console.log("B before")
+
+  const response = await next()
+
+  console.log("B after")
+
+  return response
+}
 
 export class Aya {
     router = new Router()
@@ -22,6 +43,8 @@ export class Aya {
 
         const context = new Context(request, match.params);
 
-        return match.handler(context);
+        const execute = compose([A, B, match.handler])
+
+        return execute(context);
     }
 }
