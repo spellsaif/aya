@@ -22,3 +22,24 @@ function compilePath(path: string) {
 
 console.log(compilePath('/anime/:name'))
 
+type Route = {
+  method: string,
+  regex: RegExp,
+  keys: string[],
+  handler: Function 
+}
+
+class Router {
+  routes: Route[] = []
+  add(method: string, path: string, handler: Function) {
+      const {regex, keys} = compilePath(path);
+      this.routes.push({
+        method,
+        regex,
+        keys,
+        handler
+      })
+      
+      return this;
+  }
+}
