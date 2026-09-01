@@ -59,7 +59,7 @@ class Router {
           params[route.keys[i]] = match[i+1];
         }
 
-        return [route.handler, params]
+        return {handler: route.handler, params}
 
       }
     }
