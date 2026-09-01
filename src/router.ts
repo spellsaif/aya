@@ -27,6 +27,11 @@ type Route = {
   handler: Function 
 }
 
+type MatchResult = {
+  handler: Function,
+  params: Record<string, string>
+}
+
 class Router {
   routes: Route[] = []
   add(method: string, path: string, handler: Function) {
@@ -41,7 +46,7 @@ class Router {
       return this;
   }
 
-  match(method: string, path: string) {
+  match(method: string, path: string): MatchResult | undefined {
     for (const route of this.routes) {
       if(route.method === method) {
         const match = route.regex.exec(path)
