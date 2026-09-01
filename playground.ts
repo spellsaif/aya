@@ -1,18 +1,16 @@
-function fetch(request: Request): Response {
-  const url = new URL(request.url)
+import {Aya} from './src/aya';
 
-  if(request.method === 'GET' && url.pathname ==='/') {
-    return new Response('Welcome to Aya!')
-  }
-  
-  else if(request.method === 'GET' && url.pathname === '/about') {
-    return new Response('I am Aya, your simple minimal backend library with type safety')
-  }
-  return new Response('Not Found', {status: 404})
-}
+const app = new Aya();
+
+app
+  .get('/', (c) => {
+  return c.text('Hello, I am Aya!') 
+  })
+  .get('/anime', (c) => c.text('Aya is not an anime!'))
+  .get('/anime/:name', (c)=> c.text(`Anime: ${c.params.name}`))
+
 
 Bun.serve({
   port: 3000,
-  fetch
+  fetch: (request: Request) => app.fetch(request)
 })
-

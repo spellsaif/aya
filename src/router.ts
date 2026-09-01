@@ -32,7 +32,7 @@ type MatchResult = {
   params: Record<string, string>
 }
 
-class Router {
+export class Router {
   routes: Route[] = []
   add(method: string, path: string, handler: Function) {
       const {regex, keys} = compilePath(path);
@@ -67,8 +67,4 @@ class Router {
     return undefined;
   }
 }
-
-const router = new Router();
-console.log(router.add('GET','/anime/:name', () => {}))
-console.log(router.match('GET', '/anime/naruto'));
 
