@@ -20,8 +20,6 @@ function compilePath(path: string) {
   }
 }
 
-console.log(compilePath('/anime/:name'))
-
 type Route = {
   method: string,
   regex: RegExp,
@@ -42,4 +40,30 @@ class Router {
       
       return this;
   }
+
+  match(method: string, path: string) {
+    for (const route of this.routes) {
+      if(route.method === method) {
+        const match = route.regex.exec(path)
+
+        if(!match) continue;
+
+        const params: Record<string, string> = {}
+        
+        for (let i = 0; i != route.keys.length; i++) {
+          params[route.keys[i]] = match[i+1];
+        }
+
+        return [route.handler, params]
+
+      }
+    }
+
+    return undefined;
+  }
 }
+
+const router = new Router();
+console.log(router.add('GET','/anime/:name', () => {}))
+console.log(router.match('GET', '/anime/naruto'));
+
