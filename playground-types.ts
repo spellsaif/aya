@@ -24,3 +24,7 @@ T extends `${infer First}/${infer Rest}`
 
 type E = ExtractParams<"users/:id">
 type F = ExtractParams<"users/:userId/posts/:postId">
+
+type ParamsOf<P extends string> = Record<ExtractParams<P>, string>;
+
+type G = ParamsOf<"users/:userId/posts/:postId">;
