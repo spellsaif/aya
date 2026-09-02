@@ -1,7 +1,7 @@
 
-export class Context {
+export class Context<P extends Record<string, string>> {
 
-    constructor(readonly req: Request, readonly params: Record<string, string>) {}
+    constructor(readonly req: Request, readonly params: P) {}
 
     text(data: string): Response {
         return new Response(data, {

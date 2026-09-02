@@ -1,6 +1,9 @@
 import { compose} from "./compose";
 import { Context } from "./context";
 import { Router } from "./router";
+import { ParamsOf } from "./types";
+
+type Handler<P extends string> = (c: Context<ParamsOf<P>>) => Response | Promise<Response> 
 
 export class Aya {
     router = new Router()
@@ -11,7 +14,7 @@ export class Aya {
         return this;
     }
 
-    get(path: string, handler: (c: Context) => Response | Promise<Response>) {
+    get<P extends string>(path: P, handler: Handler<P>) {
         this.router.add('GET', path, handler);
 
         return this;
