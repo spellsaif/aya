@@ -3,7 +3,7 @@ import { Context } from "./context";
 import { Router } from "./router";
 import { ParamsOf } from "./types";
 
-type Handler<P extends string> = (c: Context<ParamsOf<P>>) => Response | Promise<Response> 
+type Handler<Path extends string> = (c: Context<ParamsOf<Path>>) => Response | Promise<Response> 
 
 export class Aya {
     router = new Router()
@@ -14,7 +14,7 @@ export class Aya {
         return this;
     }
 
-    get<P extends string>(path: P, handler: Handler<P>) {
+    get<Path extends string>(path: Path, handler: Handler<Path>) {
         this.router.add('GET', path, handler);
 
         return this;
