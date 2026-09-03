@@ -31,6 +31,8 @@ app
   })
   .get('/anime', (c) => c.text('Aya is not an anime!'))
   .get('/anime/:name', (c)=> c.text(`Anime: ${c.params.name}`))
+  .get('/anime/frieren', (c)=> c.text(`Anime: Frieren`))
+
 
 
 Bun.serve({
