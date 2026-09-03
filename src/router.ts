@@ -1,3 +1,4 @@
+import { Context } from "./context"
 
 function compilePath(path: string) {
   const keys: string[] = []
@@ -20,27 +21,37 @@ function compilePath(path: string) {
   }
 }
 
+type Handler = (c: Context) => Response | Promise<Response>
+
 type Route = {
   method: string,
   regex: RegExp,
   keys: string[],
-  handler: Function 
+  handler: Handler
+  specificity: number
 }
 
 type MatchResult = {
-  handler: Function,
+  handler: Handler,
   params: Record<string, string>
 }
 
 export class Router {
   routes: Route[] = []
-  add(method: string, path: string, handler: Function) {
+  add(method: string, path: string, handler: Handler) {
       const {regex, keys} = compilePath(path);
+
+      const specificity = this.specificity(path);
       this.routes.push({
         method,
         regex,
         keys,
-        handler
+        handler,
+        specificity
+      })
+
+      this.routes.sort((a,b)=> {
+        return b.specificity - a.specificity
       })
       
       return this;
@@ -65,6 +76,27 @@ export class Router {
     }
 
     return undefined;
+  }
+
+  specificity(path: string) {
+    const segments = path.split('/')
+
+    let score = 0;
+
+    for (let i = 1; i < segments.length; i++) {
+      const s = segments[i]
+      if(s.startsWith(':')) {
+        score += 2
+      }
+      else if(s.startsWith('*')) {
+        score += 1
+      }
+      else {
+        score += 3
+      }
+    }
+
+    return score
   }
 }
 
