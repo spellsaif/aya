@@ -1,6 +1,8 @@
 
 type ExtractName<T> = 
 T extends `:${infer Name}`
+? Name
+: T extends `*${infer Name}`
 ? Name 
 : never;
 

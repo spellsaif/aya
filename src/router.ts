@@ -9,6 +9,11 @@ function compilePath(path: string) {
       keys.push(part.slice(1))
       return '([^/]+)'
     }
+
+    if(part.startsWith('*') ) {
+      keys.push(part.slice(1))
+      return '(.*)'
+    }
     return part
   })
 
