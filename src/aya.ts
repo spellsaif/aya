@@ -15,7 +15,11 @@ export class Aya {
     }
 
     get<Path extends string>(path: Path, handler: Handler<Path>) {
-        this.router.add('GET', path, handler);
+
+        const adaptedHandler = (c: Context) => {
+            return handler(c as Context<ParamsOf<Path>>)
+        }
+        this.router.add('GET', path, adaptedHandler);
 
         return this;
     }
