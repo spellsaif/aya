@@ -42,6 +42,9 @@ app
   .get("/broken", (c) => {
   throw new Error("Something broke")
   })
+  .get('/json', c=> {
+    return c.json({name: 'Aya'});
+  })
 
   for(let i = 0; i != 10000; i++) {
     app.get(`/${i}`, c => c.text(`id is ${i}`))
