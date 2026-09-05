@@ -1,5 +1,6 @@
 import { compose} from "./compose";
 import { Context } from "./context";
+import { HTTPException } from "./http-exception";
 import { Router } from "./router";
 import { ParamsOf } from "./types";
 
@@ -25,19 +26,27 @@ export class Aya {
     }
 
     async fetch(request: Request) {
-        const url = new URL(request.url);
-        const match = this.router.match(request.method, url.pathname);
+        try {
+            const url = new URL(request.url);
+            const match = this.router.match(request.method, url.pathname);
 
-        if(!match) {
-            return new Response("Not Found", {
-                status: 404
-            })
+            if(!match) {
+                return new Response("Not Found", {
+                    status: 404
+                })
+            }
+
+            const context = new Context(request, match.params);
+
+            const execute = compose([...this.middlewares, match.handler])
+
+            return await execute(context);
+        } catch (error) {
+            if (error instanceof HTTPException) {
+                return new Response(error.message, {status: error.status})
+            }
+
+            throw error
         }
-
-        const context = new Context(request, match.params);
-
-        const execute = compose([...this.middlewares, match.handler])
-
-        return execute(context);
     }
 }

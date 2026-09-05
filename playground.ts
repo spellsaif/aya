@@ -1,4 +1,5 @@
 import {Aya} from './src/aya';
+import { HTTPException } from './src/http-exception';
 
 const app = new Aya();
 
@@ -34,6 +35,12 @@ app
   .get('/anime/frieren', (c)=> c.text(`Anime: Frieren`))
   .get("/users/:id/files/*path", (c) => {
     return c.text(`${c.params.id} -> ${c.params.path}`)
+  })
+  .get('/error', async(c) => {
+    throw new HTTPException(401, 'Error');
+  })
+  .get("/broken", (c) => {
+  throw new Error("Something broke")
   })
 
   for(let i = 0; i != 10000; i++) {
