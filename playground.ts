@@ -32,9 +32,16 @@ app
   .get('/anime', (c) => c.text('Aya is not an anime!'))
   .get('/anime/:name', (c)=> c.text(`Anime: ${c.params.name}`))
   .get('/anime/frieren', (c)=> c.text(`Anime: Frieren`))
+  .get("/users/:id/files/*path", (c) => {
+    return c.text(`${c.params.id} -> ${c.params.path}`)
+  })
+
+  for(let i = 0; i != 10000; i++) {
+    app.get(`/${i}`, c => c.text(`id is ${i}`))
+  }
 
 
-
+console.log('Server is running...')
 Bun.serve({
   port: 3000,
   fetch: (request: Request) => app.fetch(request)
